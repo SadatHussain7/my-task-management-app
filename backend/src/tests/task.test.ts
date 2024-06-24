@@ -1,34 +1,8 @@
 import request from "supertest";
-import mongoose, { ConnectOptions } from "mongoose";
-import app from "../src/app";
-import Task from "../src/models/task";
-import {
-  describe,
-  expect,
-  beforeAll,
-  afterEach,
-  afterAll,
-  it,
-} from "@jest/globals";
-// import "@types/jest";
+import app from "../app";
+import Task from "../models/task";
 
-beforeAll(async () => {
-  await mongoose.connect(
-    process.env.MONGO_URI as string,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    } as ConnectOptions
-  );
-});
-
-afterEach(async () => {
-  await Task.deleteMany();
-});
-
-afterAll(async () => {
-  await mongoose.connection.close();
-});
+import "./setup";
 
 describe("Task API", () => {
   it("should create a new task", async () => {
