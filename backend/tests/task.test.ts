@@ -1,13 +1,17 @@
-const request = require("supertest");
-const mongoose = require("mongoose");
-const app = require("../app");
-const Task = require("../models/task");
+import request from "supertest";
+import mongoose, { ConnectOptions } from "mongoose";
+import app from "../src/app";
+import Task from "../src/models/task";
+// import "@types/jest";
 
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await mongoose.connect(
+    process.env.MONGO_URI as string,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    } as ConnectOptions
+  );
 });
 
 afterEach(async () => {
