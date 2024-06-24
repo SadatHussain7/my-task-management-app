@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { ITask } from "../hooks/useTasks";
+import Modal from "./ConfirmationModal"; // Adjust the import path as necessary
 
 interface TaskItemProps {
   task: ITask;
@@ -15,8 +16,23 @@ const TaskItem: React.FC<TaskItemProps> = ({
   modifyTask,
   removeTask,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     modifyTask(task._id, { status: e.target.value });
+  };
+
+  const handleDelete = () => {
+    setIsModalOpen(true); // Show the modal instead of deleting immediately
+  };
+
+  const handleConfirmDelete = () => {
+    removeTask(task._id);
+    setIsModalOpen(false); // Close the modal after confirming
+  };
+
+  const handleCancelDelete = () => {
+    setIsModalOpen(false); // Close the modal without deleting
   };
 
   return (
@@ -34,12 +50,21 @@ const TaskItem: React.FC<TaskItemProps> = ({
           <option>Done</option>
         </select>
         <button
-          onClick={() => removeTask(task._id)}
+          onClick={handleDelete}
           className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         >
           Delete
         </button>
       </div>
+      {isModalOpen && (
+        <Modal
+          isOpen={isModalOpen}
+          title="Confirm Delete"
+          message="Are you sure you want to delete this task?"
+          onConfirm={handleConfirmDelete}
+          onClose={handleCancelDelete}
+        />
+      )}
     </div>
   );
 };

@@ -13,15 +13,19 @@ const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [status, setStatus] = useState<string>("To Do");
+  const [titleError, setTitleError] = useState<boolean>(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (title.trim()) {
-      addTask({ title, description, status });
-      setTitle("");
-      setDescription("");
-      setStatus("To Do");
+    if (!title.trim()) {
+      setTitleError(true);
+      return;
     }
+    addTask({ title, description, status });
+    setTitle("");
+    setDescription("");
+    setStatus("To Do");
+    setTitleError(false);
   };
 
   return (
@@ -34,15 +38,25 @@ const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
           className="block text-gray-700 text-sm font-bold mb-2"
           htmlFor="title"
         >
-          Title
+          Title <span className="text-red-500">*</span>
         </label>
         <input
           id="title"
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          onChange={(e) => {
+            setTitle(e.target.value);
+            if (titleError && e.target.value.trim()) setTitleError(false);
+          }}
+          className={`shadow appearance-none border ${
+            titleError ? "border-red-500" : "rounded"
+          } w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
         />
+        {titleError && (
+          <p className="text-red-500 text-xs italic">
+            Please fill out this field.
+          </p>
+        )}
       </div>
       <div className="mb-4">
         <label
