@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import Task, { ITask } from "../models/task";
 
-// Create a new task
 export const createTask = async (
   req: Request,
   res: Response
@@ -15,7 +14,6 @@ export const createTask = async (
   }
 };
 
-// Get all tasks or filter by status
 export const getTasks = async (req: Request, res: Response): Promise<void> => {
   const { status } = req.query;
   const filter = status ? { status } : {};
@@ -27,7 +25,6 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Update a task by ID
 export const updateTask = async (
   req: Request,
   res: Response
@@ -59,7 +56,6 @@ export const updateTask = async (
   }
 };
 
-// Delete a task by ID
 export const deleteTask = async (
   req: Request,
   res: Response
