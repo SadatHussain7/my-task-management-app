@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { ITask } from "../hooks/useTasks";
 
 interface TaskFormProps {
   addTask: (task: {

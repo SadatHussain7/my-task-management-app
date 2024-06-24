@@ -18,59 +18,20 @@ const Modal: React.FC<ModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div
-      className="modal-backdrop"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div
-        className="modal"
-        style={{
-          backgroundColor: "white",
-          padding: "20px",
-          borderRadius: "5px",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        <h2>{title}</h2>
-        <p>{message}</p>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: "20px",
-          }}
-        >
+    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+      <div className="bg-white p-5 rounded-lg shadow-lg">
+        <h2 className="text-lg font-bold">{title}</h2>
+        <p className="mt-2">{message}</p>
+        <div className="flex justify-end mt-4">
           <button
             onClick={onClose}
-            style={{
-              marginRight: "10px",
-              padding: "5px 10px",
-              backgroundColor: "#f5f5f5",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-            }}
+            className="mr-2 py-2 px-4 bg-gray-200 border border-gray-300 rounded text-gray-700"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            style={{
-              padding: "5px 10px",
-              backgroundColor: "#007bff",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-            }}
+            className="py-2 px-4 bg-blue-600 text-white rounded"
           >
             Confirm
           </button>

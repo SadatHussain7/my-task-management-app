@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ITask } from "../hooks/useTasks";
-import Modal from "./ConfirmationModal"; // Adjust the import path as necessary
+import Modal from "./ConfirmationModal";
 
 interface TaskItemProps {
   task: ITask;
@@ -23,16 +23,16 @@ const TaskItem: React.FC<TaskItemProps> = ({
   };
 
   const handleDelete = () => {
-    setIsModalOpen(true); // Show the modal instead of deleting immediately
+    setIsModalOpen(true);
   };
 
   const handleConfirmDelete = () => {
     removeTask(task._id);
-    setIsModalOpen(false); // Close the modal after confirming
+    setIsModalOpen(false);
   };
 
   const handleCancelDelete = () => {
-    setIsModalOpen(false); // Close the modal without deleting
+    setIsModalOpen(false);
   };
 
   return (
