@@ -1,12 +1,15 @@
 import { Request, Response } from "express";
 import Task, { ITask } from "../models/task";
+import { AuthRequest } from "../middleware/auth";
+import { SortOrder } from "mongoose";
 
+// Create a new task
 export const createTask = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
-    const task: ITask = new Task(req.body);
+    const task = new Task({ ...req.body, user: req.user._id });
     await task.save();
     res.status(201).json(task);
   } catch (error: any) {
@@ -14,24 +17,43 @@ export const createTask = async (
   }
 };
 
-export const getTasks = async (req: Request, res: Response): Promise<void> => {
-  const { status } = req.query;
-  const filter = status ? { status } : {};
+// Get all tasks or filter by status
+export const getTasks = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
+  const { status, search, sortBy, sortOrder } = req.query;
+  const filter: { user: string; status?: string; title?: object } = {
+    user: req.user._id,
+    ...(status ? { status: status.toString() } : {}),
+  };
+
+  if (search) {
+    filter.title = { $regex: search, $options: "i" };
+  }
+
+  const sort: { [key: string]: number } = sortBy
+    ? { [sortBy as string]: sortOrder === "desc" ? -1 : 1 }
+    : {};
+
   try {
-    const tasks: ITask[] = await Task.find(filter);
+    const tasks: ITask[] = await Task.find(filter).sort(
+      sort as { [key: string]: SortOrder | { $meta: any } }
+    );
     res.status(200).json(tasks);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 };
 
+// Update a task by ID
 export const updateTask = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   const { id } = req.params;
   const updates = Object.keys(req.body);
-  const allowedUpdates = ["title", "description", "status"];
+  const allowedUpdates = ["title", "description", "status", "dueDate"];
   const isValidUpdate = updates.every((update) =>
     allowedUpdates.includes(update)
   );
@@ -42,7 +64,10 @@ export const updateTask = async (
   }
 
   try {
-    const task: ITask | null = await Task.findById(id);
+    const task: ITask | null = await Task.findOne({
+      _id: id,
+      user: req.user._id,
+    });
     if (!task) {
       res.status(404).json({ error: "Task not found" });
       return;
@@ -56,13 +81,17 @@ export const updateTask = async (
   }
 };
 
+// Delete a task by ID
 export const deleteTask = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   const { id } = req.params;
   try {
-    const task: ITask | null = await Task.findByIdAndDelete(id);
+    const task: ITask | null = await Task.findOneAndDelete({
+      _id: id,
+      user: req.user._id,
+    });
     if (!task) {
       res.status(404).json({ error: "Task not found" });
       return;

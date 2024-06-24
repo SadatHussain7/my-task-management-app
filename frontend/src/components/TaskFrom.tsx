@@ -5,6 +5,7 @@ interface TaskFormProps {
     title: string;
     description: string;
     status: string;
+    dueDate?: string;
   }) => void;
 }
 
@@ -12,19 +13,17 @@ const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [status, setStatus] = useState<string>("To Do");
-  const [titleError, setTitleError] = useState<boolean>(false);
+  const [dueDate, setDueDate] = useState<string>("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim()) {
-      setTitleError(true);
-      return;
+    if (title.trim()) {
+      addTask({ title, description, status, dueDate });
+      setTitle("");
+      setDescription("");
+      setStatus("To Do");
+      setDueDate("");
     }
-    addTask({ title, description, status });
-    setTitle("");
-    setDescription("");
-    setStatus("To Do");
-    setTitleError(false);
   };
 
   return (
@@ -37,25 +36,15 @@ const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
           className="block text-gray-700 text-sm font-bold mb-2"
           htmlFor="title"
         >
-          Title <span className="text-red-500">*</span>
+          Title
         </label>
         <input
           id="title"
           type="text"
           value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-            if (titleError && e.target.value.trim()) setTitleError(false);
-          }}
-          className={`shadow appearance-none border ${
-            titleError ? "border-red-500" : "rounded"
-          } w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          onChange={(e) => setTitle(e.target.value)}
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
-        {titleError && (
-          <p className="text-red-500 text-xs italic">
-            Please fill out this field.
-          </p>
-        )}
       </div>
       <div className="mb-4">
         <label
@@ -88,6 +77,21 @@ const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
           <option>In Progress</option>
           <option>Done</option>
         </select>
+      </div>
+      <div className="mb-4">
+        <label
+          className="block text-gray-700 text-sm font-bold mb-2"
+          htmlFor="dueDate"
+        >
+          Due Date
+        </label>
+        <input
+          id="dueDate"
+          type="date"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
       </div>
       <div className="flex items-center justify-between">
         <button
