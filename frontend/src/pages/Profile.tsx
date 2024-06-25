@@ -1,15 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
 const Profile: React.FC = () => {
   const { user, fetchUserProfile } = useAuth();
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    fetchUserProfile();
-  }, [fetchUserProfile]);
+    if (user) {
+      setLoading(false);
+    } else {
+      fetchUserProfile().finally(() => setLoading(false));
+    }
+  }, [user, fetchUserProfile]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   if (!user) {
-    return <p>Loading...</p>;
+    return <p>No user data</p>;
   }
 
   return (

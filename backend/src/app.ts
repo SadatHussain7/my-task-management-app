@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import mongoose, { ConnectOptions } from "mongoose";
+import cors from "cors";
 import taskRoutes from "./routes/taskRoutes";
 import userRoutes from "./routes/userRoutes";
 
@@ -10,6 +11,7 @@ dotenv.config();
 
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan("dev"));
 app.use("/api", taskRoutes);

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import User, { IUser } from "../models/user";
+import { AuthRequest } from "../middleware/auth";
 
 const generateToken = (user: IUser) => {
   return jwt.sign(
@@ -11,7 +12,6 @@ const generateToken = (user: IUser) => {
 };
 
 export const register = async (req: Request, res: Response): Promise<void> => {
-  console.log(req.body);
   try {
     const { username, email, password } = req.body;
     const user = new User({ username, email, password });
@@ -39,11 +39,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const getProfile = async (
-  req: Request | any,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
-    const user = await User.findById(req?.user?._id);
+    const user = await User.findById(req.user._id);
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;

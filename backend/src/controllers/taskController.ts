@@ -3,7 +3,6 @@ import Task, { ITask } from "../models/task";
 import { AuthRequest } from "../middleware/auth";
 import { SortOrder } from "mongoose";
 
-// Create a new task
 export const createTask = async (
   req: AuthRequest,
   res: Response
@@ -17,7 +16,6 @@ export const createTask = async (
   }
 };
 
-// Get all tasks or filter by status
 export const getTasks = async (
   req: AuthRequest,
   res: Response
@@ -46,7 +44,6 @@ export const getTasks = async (
   }
 };
 
-// Update a task by ID
 export const updateTask = async (
   req: AuthRequest,
   res: Response
@@ -81,7 +78,6 @@ export const updateTask = async (
   }
 };
 
-// Delete a task by ID
 export const deleteTask = async (
   req: AuthRequest,
   res: Response
