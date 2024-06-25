@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:4004/api",
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
 export const getTasks = () => api.get("/tasks");
